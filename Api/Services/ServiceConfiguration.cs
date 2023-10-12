@@ -20,7 +20,7 @@ public static class ServiceConfiguration
         }
     }
 
-    public static void ConfigureDatabase(this WebApplicationBuilder builder)
+    public static void ConfigureDataServices(this WebApplicationBuilder builder)
     {
         var connectionString = builder.Configuration.GetConnectionString("DbConnection");
         if (string.IsNullOrEmpty(connectionString))
@@ -32,5 +32,7 @@ public static class ServiceConfiguration
         {
             opt.UseMySQL(connectionString);
         });
+
+        builder.Services.AddScoped<RepositoryManager>();
     }
 }
