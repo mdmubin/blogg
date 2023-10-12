@@ -12,7 +12,9 @@ public static class Program
 
         builder.ConfigureLogging();
         builder.ConfigureSwagger();
-        builder.ConfigureDatabase();
+        builder.ConfigureDataServices();
+
+        builder.Services.AddControllers();
 
         var app = builder.Build();
 
@@ -25,7 +27,8 @@ public static class Program
             context.Database.Migrate();
         }
 
-        app.MapGet("/", () => "Hello World!");
+        app.MapControllers();
+
         app.Run();
     }
 }
