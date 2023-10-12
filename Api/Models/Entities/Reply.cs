@@ -12,6 +12,6 @@ public class Reply : EntityBase
 
     //
 
-    public int ParentId { get; set; }
+    public Guid ParentId { get; set; }
     public Comment Parent { get; set; } = null!;
 }
