@@ -1,12 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Api.Models.Entities;
 
-public class Tag
+public class Tag : EntityBase
 {
-    [Key]
-    public int Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     public string NormalizedName { get; set; } = null!;

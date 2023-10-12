@@ -1,14 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Api.Models.Entities;
 
-public class Blog
+public class Blog : EntityBase
 {
-    [Key]
-    public int Id { get; set; }
-
-    //
-
     public DateTime PostedDateTime { get; set; }
 
     public bool IsPublic { get; set; }

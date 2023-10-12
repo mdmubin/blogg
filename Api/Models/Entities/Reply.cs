@@ -1,14 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Api.Models.Entities;
 
-public class Reply
+public class Reply : EntityBase
 {
-    [Key]
-    public int Id { get; set; }
-
-    //
-
     public int UpVotes { get; set; }
 
     public int DownVotes { get; set; }
