@@ -2,7 +2,7 @@ namespace Api.Models.Entities;
 
 public class Tag : EntityBase
 {
-    public string Name { get; set; } = null!;
+    public string TagName { get; set; } = null!;
 
     public string NormalizedName { get; set; } = null!;
 

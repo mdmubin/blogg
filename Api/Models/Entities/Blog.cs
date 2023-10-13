@@ -12,7 +12,7 @@ public class Blog : EntityBase
 
     public string? CoverImgUrl { get; set; }
 
-    public string UrlSlug { get; set; } = null!;
+    // public string UrlSlug { get; set; } = null!;
 
     public string? ShortDescription { get; set; }
 
