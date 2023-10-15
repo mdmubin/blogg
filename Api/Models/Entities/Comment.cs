@@ -2,6 +2,8 @@ namespace Api.Models.Entities;
 
 public class Comment : EntityBase
 {
+    public bool Edited { get; set; }
+
     public int UpVotes { get; set; }
 
     public int DownVotes { get; set; }
