@@ -18,6 +18,12 @@ public static class Program
 
         var app = builder.Build();
 
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
         // TODO: remove this. recreates db on every run (very bad idea, but need it just for now)
         using (var scope = app.Services.CreateScope())
         {
