@@ -34,5 +34,6 @@ public static class ServiceConfiguration
         });
 
         builder.Services.AddScoped<RepositoryManager>();
+        builder.Services.AddAutoMapper(typeof(DataMapper));
     }
 }
