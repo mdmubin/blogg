@@ -18,9 +18,11 @@ public class GenericDataRepository<T>
         return context.Set<T>().AsNoTracking();
     }
 
-    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> condition)
+    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> condition, bool tracking = false)
     {
-        return context.Set<T>().Where(condition).AsNoTracking();
+        return tracking
+            ? context.Set<T>().Where(condition).AsTracking()
+            : context.Set<T>().Where(condition).AsNoTracking();
     }
 
     public void Create(T item)
