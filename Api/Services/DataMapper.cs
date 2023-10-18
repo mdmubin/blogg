@@ -1,6 +1,7 @@
 using Api.Models.Dto.Requests;
 using Api.Models.Dto.Responses;
 using Api.Models.Entities;
+
 using AutoMapper;
 
 namespace Api.Services;
@@ -21,7 +22,9 @@ public class DataMapper : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()))
             .ForMember(dest => dest.PostedDateTime, opt => opt.MapFrom(_ => DateTime.Now));
 
-        CreateMap<BlogUpdateRequest, Blog>();
+        CreateMap<BlogUpdateRequest, Blog>()
+            // from https://github.com/AutoMapper/AutoMapper/issues/2335
+            .ForAllMembers(opt => opt.Condition((src, dest, srcVal, destVal) => srcVal != null));
 
         CreateMap<Blog, BlogResponse>();
     }
