@@ -86,10 +86,9 @@ public class TagController : ControllerBase
             return NotFound();
         }
 
-        var newTag = mapper.Map<Tag>(request);
-        newTag.Id = id;
+        mapper.Map(request, existing);
 
-        repository.Tags.Update(newTag);
+        repository.Tags.Update(existing);
         await repository.SaveChanges();
 
         return Accepted();
