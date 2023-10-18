@@ -24,7 +24,7 @@ public class TagController : ControllerBase
     }
 
 
-    [HttpGet( Name = "Get All Tags")]
+    [HttpGet]
     public async Task<ActionResult> GetAllTags()
     {
         var tagList = await repository.Tags.GetAll()
@@ -35,7 +35,7 @@ public class TagController : ControllerBase
         return Ok(tagResult);
     }
 
-    [HttpGet("{id:guid}", Name = "Get By Id")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult> GetTagById(Guid id)
     {
         var tag = await repository.Tags
