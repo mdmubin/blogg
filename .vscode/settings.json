@@ -14,5 +14,8 @@
         "**/obj/": true,
     },
     "files.autoSave": "off",
-    "svg.preview.background": "editor"
+    "svg.preview.background": "editor",
+    "[javascriptreact]": {
+        "editor.tabSize": 2
+    }
 }
