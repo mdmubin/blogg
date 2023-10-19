@@ -13,5 +13,6 @@
         "**/bin/": true,
         "**/obj/": true,
     },
-    "files.autoSave": "off"
+    "files.autoSave": "off",
+    "svg.preview.background": "editor"
 }
