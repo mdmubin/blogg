@@ -1,6 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import * as Views from './views';
