@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
 function LoginView() {
@@ -48,8 +49,7 @@ function LoginView() {
             Login
           </button>
           <div className="row">
-            {/* TODO: change to react-router-dom:Link maybe for tracking history */}
-            <a href="/register">Don&apos;t have an account?</a>
+            <Link to="/register">Don&apos;t have an account?</Link>
           </div>
         </div>
 

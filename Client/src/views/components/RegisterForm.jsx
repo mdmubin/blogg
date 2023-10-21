@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
 function RegisterForm() {
@@ -75,7 +76,7 @@ function RegisterForm() {
             Register
           </button>
           <div className="row">
-            <a href="/login">Already have an account?</a>
+            <Link to="/login">Already have an account?</Link>
           </div>
         </div>
 

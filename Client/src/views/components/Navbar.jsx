@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Types from 'prop-types';
 import Logo from './Logo';
 
@@ -6,10 +7,10 @@ function Navbar({ activeTab }) {
   return (
     <nav className="navbar navbar-expand-md border-bottom bg-light" data-bs-theme="light">
       <div className="container">
-        <a className="navbar-brand" href="/">
+        <Link className="navbar-brand" to="/">
           <Logo w={48} h={48} />
           Blogg
-        </a>
+        </Link>
         <button
           aria-controls="navbarToggleContent"
           aria-expanded="false"
@@ -24,9 +25,10 @@ function Navbar({ activeTab }) {
         <div className="collapse navbar-collapse" id="navbarToggleContent">
           <ul className="navbar-nav ms-auto px-2">
             <li className="nav-item">
-              <a className={`nav-link ${activeTab === 'HOME' ? 'active' : ''}`} href="/">
+              <Link className={`nav-link ${activeTab === 'HOME' ? 'active' : ''}`} to="/">
+                <i className="bi bi-house pe-1" />
                 Home
-              </a>
+              </Link>
             </li>
             <li className="nav-item dropdown">
               <div
@@ -35,13 +37,31 @@ function Navbar({ activeTab }) {
                 aria-expanded="false"
                 role="button"
               >
+                <i className="bi bi-person pe-1" />
                 Profile
               </div>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="/">Login</a></li>
-                <li><a className="dropdown-item" href="/">Report</a></li>
+                <li>
+                  <Link className="dropdown-item" to="/login">
+                    <i className="bi bi-box-arrow-in-right pe-2" />
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/">
+                    <i className="bi bi-gear pe-2" />
+                    Settings
+                  </Link>
+                </li>
+
                 <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="/">Github</a></li>
+
+                <li>
+                  <Link className="dropdown-item" href="https://github.com/mdmubin/blogg">
+                    <i className="bi bi-github pe-2" />
+                    Github
+                  </Link>
+                </li>
               </ul>
             </li>
           </ul>
