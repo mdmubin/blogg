@@ -1,4 +1,5 @@
 using Api.Data;
+using Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services;
@@ -32,6 +33,9 @@ public static class ServiceConfiguration
         {
             opt.UseMySQL(connectionString);
         });
+
+        builder.Services.AddIdentity<User, UserRole>()
+            .AddEntityFrameworkStores<BloggContext>();
 
         builder.Services.AddScoped<RepositoryManager>();
         builder.Services.AddAutoMapper(typeof(DataMapper));

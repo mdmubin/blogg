@@ -15,6 +15,10 @@ public class RepositoryManager
 
     private readonly Lazy<GenericDataRepository<Tag>> TagsRepository;
 
+    private readonly Lazy<GenericDataRepository<User>> UserRepository;
+
+    private readonly Lazy<GenericDataRepository<UserRole>> UserRoleRepository;
+
 
     public RepositoryManager(BloggContext context)
     {
@@ -24,6 +28,8 @@ public class RepositoryManager
         CommentsRepository = new(() => new(this.context));
         RepliesRepository = new(() => new(this.context));
         TagsRepository = new(() => new(this.context));
+        UserRepository = new(() => new(this.context));
+        UserRoleRepository = new(() => new(this.context));
     }
 
 
@@ -34,6 +40,10 @@ public class RepositoryManager
     public GenericDataRepository<Reply> Replies => RepliesRepository.Value;
 
     public GenericDataRepository<Tag> Tags => TagsRepository.Value;
+
+    public GenericDataRepository<User> Users => UserRepository.Value;
+
+    public GenericDataRepository<UserRole> UserRoles => UserRoleRepository.Value;
 
 
     public async Task SaveChanges()

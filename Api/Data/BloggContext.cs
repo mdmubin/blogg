@@ -1,9 +1,10 @@
 using Api.Models.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data;
 
-public class BloggContext : DbContext
+public class BloggContext : IdentityDbContext<User, UserRole, Guid>
 {
     public BloggContext(DbContextOptions options)
         : base(options)
