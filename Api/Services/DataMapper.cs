@@ -14,6 +14,7 @@ public class DataMapper : Profile
         ConfigureCommentMappings();
         ConfigureReplyMappings();
         ConfigureTagMappings();
+        ConfigureUserMappings();
     }
 
     public void ConfigureBlogMappings()
@@ -60,5 +61,17 @@ public class DataMapper : Profile
             .ForMember(dest => dest.NormalizedName, opt => opt.MapFrom(src => src.TagName.Normalize()));
 
         CreateMap<Tag, TagResponse>();
+    }
+
+    public void ConfigureUserMappings()
+    {
+        CreateMap<UserRegistrationRequest, User>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()))
+            .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.Normalize()))
+            .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.UserName.Normalize()));
+
+        CreateMap<UserUpdateRequest, User>();
+
+        CreateMap<User, UserResponse>();
     }
 }
