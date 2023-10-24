@@ -1,3 +1,4 @@
+using Api.Data.Config;
 using Api.Models.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,4 +19,12 @@ public class BloggContext : IdentityDbContext<User, UserRole, Guid>
     public DbSet<Tag> Tags { get; set; }
 
     public DbSet<Reply> Replies { get; set; }
+
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.ApplyConfiguration(new RoleConfig());
+    }
 }
