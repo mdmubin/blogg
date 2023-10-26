@@ -13,6 +13,8 @@ public static class Program
         builder.ConfigureLogging();
         builder.ConfigureSwagger();
         builder.ConfigureDataServices();
+        builder.ConfigureAuthServices();
+        // builder.ConfigureCookies();
 
         builder.Services.AddControllers();
 
@@ -32,6 +34,9 @@ public static class Program
             context.Database.EnsureCreated();
             context.Database.Migrate();
         }
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 

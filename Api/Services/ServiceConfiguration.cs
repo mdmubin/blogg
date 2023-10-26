@@ -34,10 +34,45 @@ public static class ServiceConfiguration
             opt.UseMySQL(connectionString);
         });
 
-        builder.Services.AddIdentity<User, UserRole>()
-            .AddEntityFrameworkStores<BloggContext>();
-
         builder.Services.AddScoped<RepositoryManager>();
         builder.Services.AddAutoMapper(typeof(DataMapper));
+    }
+
+    public static void ConfigureAuthServices(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication();
+
+        builder.Services.AddIdentity<User, UserRole>(opt =>
+        {
+            // Password settings
+            opt.Password.RequireDigit = false;
+            opt.Password.RequireLowercase = false;
+            opt.Password.RequireNonAlphanumeric = false;
+            opt.Password.RequireUppercase = false;
+            opt.Password.RequireLowercase = false;
+            opt.Password.RequiredLength = 6;
+            opt.Password.RequiredUniqueChars = 1;
+
+            // Lockout settings
+            opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            opt.Lockout.MaxFailedAccessAttempts = 5;
+            opt.Lockout.AllowedForNewUsers = true;
+
+            // User settings
+            opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+            opt.User.RequireUniqueEmail = true;
+        })
+        .AddEntityFrameworkStores<BloggContext>();
+
+        builder.Services.AddScoped<JwtService>();
+        builder.Services.AddScoped<AuthService>();
+    }
+
+    public static void ConfigureCookies(this WebApplicationBuilder builder)
+    {
+        builder.Services.ConfigureApplicationCookie(opt =>
+        {
+            // TODO: Configure cookies here
+        });
     }
 }
