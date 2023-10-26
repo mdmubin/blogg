@@ -2,7 +2,6 @@ using Api.Data;
 using Api.Models.Entities;
 using Api.Models.Dto.Requests;
 using Api.Models.Dto.Responses;
-
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -35,3 +35,16 @@ public class UserUpdateRequest
     [Compare("Password", ErrorMessage = "Passwords don't match")]
     public string? ConfirmPassword { get; set; } = string.Empty;
 }
+
+public class UserAuthRequest
+{
+    [EmailAddress]
+    [Required(ErrorMessage = "Username cannot be empty")]
+    public string Email { get; set; } = null!;
+
+    [DataType(DataType.Password)]
+    [Required(ErrorMessage = "Password cannot be empty")]
+    public string Password { get; set; } = null!;
+
+    // public bool RememberUser { get; set; } = true;
+}

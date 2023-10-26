@@ -70,7 +70,8 @@ public class DataMapper : Profile
             .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.Normalize()))
             .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.UserName.Normalize()));
 
-        CreateMap<UserUpdateRequest, User>();
+        CreateMap<UserUpdateRequest, User>()
+            .ForAllMembers(opt => opt.Condition((src, dest, srcVal, destVal) => srcVal != null));
 
         CreateMap<User, UserResponse>();
     }
