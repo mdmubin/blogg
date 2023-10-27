@@ -1,6 +1,9 @@
+using System.Text;
 using Api.Data;
 using Api.Models.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Services;
 
@@ -40,7 +43,23 @@ public static class ServiceConfiguration
 
     public static void ConfigureAuthServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddAuthentication();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opt =>
+            {
+                var jwtConfiguration = builder.Configuration.GetSection("JwtConfiguration");
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = jwtConfiguration["Audience"]!,
+                    ValidIssuer = jwtConfiguration["Issuer"]!,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtConfiguration["JwtSecret"]!)
+                    ),
+                };
+            });
 
         builder.Services.AddIdentity<User, UserRole>(opt =>
         {
@@ -63,8 +82,6 @@ public static class ServiceConfiguration
             opt.User.RequireUniqueEmail = true;
         })
         .AddEntityFrameworkStores<BloggContext>();
-
-        builder.Services.AddScoped<JwtService>();
         builder.Services.AddScoped<AuthService>();
     }
 
