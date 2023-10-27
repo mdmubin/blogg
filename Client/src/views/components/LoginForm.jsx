@@ -19,7 +19,7 @@ function LoginView() {
         </div>
 
         <div className="mb-3 px-4">
-          <label htmlFor="EmailInputField" className="form-label">Email address</label>
+          <label htmlFor="EmailInputField" className="form-label ps-1">Email address</label>
           <input
             type="email"
             id="EmailInputField"
@@ -31,7 +31,7 @@ function LoginView() {
         </div>
 
         <div className="mb-3 px-4">
-          <label htmlFor="PasswordInputField" className="form-label">
+          <label htmlFor="PasswordInputField" className="form-label ps-1">
             Password
           </label>
           <input

@@ -67,7 +67,7 @@ function RegisterForm() {
 
         <div className="mb-3 px-4">
           <input type="checkbox" className="form-check-input" id="TermsConditionsAgree" />
-          <label className="form-check-label px-2" htmlFor="TermsConditionsAgree">* I agree to the terms &amp; conditions.</label>
+          <label className="form-check-label px-2" htmlFor="TermsConditionsAgree">I agree to the terms &amp; conditions.</label>
         </div>
 
         <div className="container text-center pb-4">
