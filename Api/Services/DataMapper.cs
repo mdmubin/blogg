@@ -65,10 +65,10 @@ public class DataMapper : Profile
 
     public void ConfigureUserMappings()
     {
-        CreateMap<UserRegistrationRequest, User>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()))
-            .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.Normalize()))
-            .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.UserName.Normalize()));
+        CreateMap<UserRegistrationRequest, User>();
+            // .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()));
+            // .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.Normalize()))
+            // .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.UserName.Normalize()));
 
         CreateMap<UserUpdateRequest, User>()
             .ForAllMembers(opt => opt.Condition((src, dest, srcVal, destVal) => srcVal != null));
