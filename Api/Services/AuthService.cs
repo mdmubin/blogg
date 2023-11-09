@@ -31,7 +31,7 @@ public class AuthService
         var result = await userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
         {
-            await userManager.AddToRoleAsync(user, "registered_user");
+            await userManager.AddToRoleAsync(user, "user");
             var userResult = mapper.Map<UserResponse>(user);
             return (result, user.Id, userResult);
         }
@@ -39,31 +39,42 @@ public class AuthService
         return (result, Guid.Empty, null);
     }
 
-    public async Task<(bool validated, User? user)> ValidateUser(UserAuthRequest request)
+    public async Task<(bool validated, User? user, IList<string>? roles)> ValidateUser(UserAuthRequest request)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
 
-        var validUser = user != null && await userManager.CheckPasswordAsync(user, request.Password);
+        if (user != null)
+        {
+            var validUser = await userManager.CheckPasswordAsync(user, request.Password);
+            var userRoles = await userManager.GetRolesAsync(user);
 
-        return (validUser, user);
+            return (validUser, user, userRoles);
+        }
+
+        return (false, null, null);
     }
 
-    public AuthResponse GenerateJwtTokenResponse(Guid userId, string username)
+    public AuthResponse GenerateJwtTokenResponse(Guid userId, string username, IList<string> roles)
     {
         var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["JwtSecret"]!));
         var signingCredentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
 
         var expiresAt = DateTime.UtcNow.AddMinutes(double.Parse(jwtConfig["ExpiresAfter"]!));
 
-        var userClaims = new[]
+        var userClaims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, jwtConfig["Subject"]!),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-            new Claim(JwtRegisteredClaimNames.Exp, expiresAt.ToString()),
-            new Claim(ClaimTypes.Name, username),
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new(JwtRegisteredClaimNames.Sub, jwtConfig["Subject"]!),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+            new(JwtRegisteredClaimNames.Exp, expiresAt.ToString()),
+            new(ClaimTypes.Name, username),
+            new(ClaimTypes.NameIdentifier, userId.ToString()),
         };
+
+        foreach (var role in roles)
+        {
+            userClaims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var token = new JwtSecurityToken(
             issuer: jwtConfig["Issuer"],

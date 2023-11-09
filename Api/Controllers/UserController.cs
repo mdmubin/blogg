@@ -3,6 +3,7 @@ using Api.Models.Dto.Requests;
 using Api.Models.Dto.Responses;
 using Api.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,37 +47,38 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{username}")]
-    public async Task<ActionResult> GetUserById(string username)
+    [Authorize(Roles = "admin")]
+    public async Task<ActionResult> GetUserByUsername(string username)
     {
         if (string.IsNullOrEmpty(username))
         {
             return BadRequest("Username is empty");
         }
-    
+
         var user = await manager.Users
             .FindByCondition(u => u.UserName == username)
             .FirstOrDefaultAsync();
-    
+
         if (user == null)
         {
             return NotFound();
         }
-    
+
         var userResult = mapper.Map<UserResponse>(user);
-    
+
         return Ok(userResult);
     }
 
     [HttpPost("login")]
     public async Task<ActionResult> UserLogin([FromBody] UserAuthRequest request)
     {
-        var (validated, user) = await authService.ValidateUser(request);
+        var (validated, user, roles) = await authService.ValidateUser(request);
         if (!validated)
         {
             return Unauthorized("Incorrect email / password");
         }
 
-        var token = authService.GenerateJwtTokenResponse(user!.Id, user.UserName!);
+        var token = authService.GenerateJwtTokenResponse(user!.Id, user.UserName!, roles!);
 
         return Ok(token);
     }
