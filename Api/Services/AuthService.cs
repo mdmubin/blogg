@@ -63,12 +63,11 @@ public class AuthService
 
         var userClaims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, jwtConfig["Subject"]!),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
             new(JwtRegisteredClaimNames.Exp, expiresAt.ToString()),
-            new(ClaimTypes.Name, username),
-            new(ClaimTypes.NameIdentifier, userId.ToString()),
+            new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Name, username),
+            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
         };
 
         foreach (var role in roles)
