@@ -28,11 +28,13 @@ public class BloggContext : IdentityDbContext<User, UserRole, Guid>
         base.OnModelCreating(builder);
 
         var adminRoleId = Guid.NewGuid();
+        var moderatorRoleId = Guid.NewGuid();
+        var userRoleId = Guid.NewGuid();
 
         builder.Entity<UserRole>().HasData(
             new() { Id = adminRoleId, Name = "admin", NormalizedName = "ADMIN" },
-            new() { Id = Guid.NewGuid(), Name = "moderator", NormalizedName = "MODERATOR" },
-            new() { Id = Guid.NewGuid(), Name = "user", NormalizedName = "USER" }
+            new() { Id = moderatorRoleId, Name = "moderator", NormalizedName = "MODERATOR" },
+            new() { Id = userRoleId, Name = "user", NormalizedName = "USER" }
         );
 
         // admin user seed
@@ -53,8 +55,12 @@ public class BloggContext : IdentityDbContext<User, UserRole, Guid>
 
         builder.Entity<User>().HasData(admin);
 
-        // add admin role to the user
+        // admin has access to all roles
         builder.Entity<IdentityUserRole<Guid>>()
-            .HasData(new IdentityUserRole<Guid>() { UserId = admin.Id, RoleId = adminRoleId });
+            .HasData(
+                new IdentityUserRole<Guid>() { UserId = admin.Id, RoleId = adminRoleId },
+                new IdentityUserRole<Guid>() { UserId = admin.Id, RoleId = moderatorRoleId },
+                new IdentityUserRole<Guid>() { UserId = admin.Id, RoleId = userRoleId }
+            );
     }
 }
