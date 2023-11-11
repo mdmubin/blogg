@@ -1,6 +1,6 @@
 namespace Api.Models.Entities;
 
-public class Blog : EntityBase
+public class Blog : ContentBase
 {
     public DateTime PostedDateTime { get; set; }
 
@@ -17,8 +17,6 @@ public class Blog : EntityBase
     public string? ShortDescription { get; set; }
 
     public string Content { get; set; } = null!;
-
-    //
 
     public ICollection<Tag> Tags { get; set; } = null!;
 

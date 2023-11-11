@@ -1,6 +1,6 @@
 namespace Api.Models.Entities;
 
-public class Comment : EntityBase
+public class Comment : ContentBase
 {
     public bool Edited { get; set; }
 
@@ -12,9 +12,8 @@ public class Comment : EntityBase
 
     public DateTime PostedDateTime { get; set; }
 
-    //
-
     public Guid BlogId { get; set; }
+
     public Blog? Blog { get; set; }
 
     public ICollection<Reply> Replies { get; set; } = null!;

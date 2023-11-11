@@ -1,6 +1,6 @@
 namespace Api.Models.Entities;
 
-public class Reply : EntityBase
+public class Reply : ContentBase
 {
     public bool Edited { get; set; }
 
