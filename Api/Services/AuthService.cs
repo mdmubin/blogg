@@ -2,6 +2,7 @@ using Api.Models.Dto.Requests;
 using Api.Models.Dto.Responses;
 using Api.Models.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,13 +16,15 @@ public class AuthService
     private readonly IConfiguration jwtConfig;
     private readonly IMapper mapper;
     private readonly UserManager<User> userManager;
+    private readonly IAuthorizationService authorizationService;
 
 
-    public AuthService(IMapper mapper, UserManager<User> userManager, IConfiguration appConfig)
+    public AuthService(IMapper mapper, UserManager<User> userManager, IConfiguration appConfig, IAuthorizationService authorizationService)
     {
         this.jwtConfig = appConfig.GetSection("JwtConfiguration");
         this.mapper = mapper;
         this.userManager = userManager;
+        this.authorizationService = authorizationService;
     }
 
     public async Task<(IdentityResult Status, Guid Id, UserResponse? UserResponse)> Register(UserRegistrationRequest request)
@@ -86,5 +89,11 @@ public class AuthService
         var tokenHandler = new JwtSecurityTokenHandler();
 
         return new AuthResponse { Token = tokenHandler.WriteToken(token), Expires = expiresAt, };
+    }
+
+    public bool UserHasPermissions(ClaimsPrincipal userClaim, ContentBase content, string policy)
+    {
+        var permissionResult = authorizationService.AuthorizeAsync(userClaim, content, policy);
+        return permissionResult.Result.Succeeded;
     }
 }

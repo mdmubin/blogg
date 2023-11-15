@@ -1,7 +1,9 @@
 using System.Text;
 using Api.Data;
 using Api.Models.Entities;
+using Api.Services.AuthHandlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -111,7 +113,25 @@ public static class ServiceConfiguration
             .AddRoles<UserRole>()
             .AddEntityFrameworkStores<BloggContext>();
 
+        builder.Services
+            .AddAuthorization(opt =>
+            {
+                opt.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                opt.AddPolicy(
+                    "AuthorOnlyPolicy",
+                    policy => policy.Requirements.Add(new AuthRequirements.Author())
+                );
+                opt.AddPolicy(
+                    "AuthorAndModeratorPolicy",
+                    policy => policy.Requirements.Add(new AuthRequirements.AuthorAndModerator())
+                );
+            });
+
         builder.Services.AddScoped<AuthService>();
+        builder.Services.AddSingleton<IAuthorizationHandler, ContentDeleteHandler>();
+        builder.Services.AddSingleton<IAuthorizationHandler, ContentUpdateHandler>();
     }
 
     public static void ConfigureCookies(this WebApplicationBuilder builder)
