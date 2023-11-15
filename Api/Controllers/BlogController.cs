@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using Api.Data;
 using Api.Models.Dto.Requests;
 using Api.Models.Dto.Responses;
 using Api.Models.Entities;
-
+using Api.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,17 +17,23 @@ public class BlogController : ControllerBase
 {
     private readonly IMapper mapper;
     private readonly RepositoryManager repository;
+    private readonly AuthService authService;
 
-    public BlogController(RepositoryManager repository, IMapper mapper)
+    public BlogController(RepositoryManager repository, IMapper mapper, AuthService authService)
     {
         this.mapper = mapper;
         this.repository = repository;
+        this.authService = authService;
     }
 
     [HttpPost]
+    [Authorize(Roles = "user")]
     public async Task<ActionResult> CreateBlog([FromBody] BlogCreateRequest request)
     {
+        var currentUser = User.FindFirst(ClaimTypes.NameIdentifier);
+
         var newBlog = mapper.Map<Blog>(request);
+        newBlog.AuthorId = Guid.Parse(currentUser!.Value);
 
         repository.Blogs.Create(newBlog);
         await repository.SaveChanges();
@@ -37,6 +45,7 @@ public class BlogController : ControllerBase
 
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetBlog(Guid id)
     {
         var blog = await repository.Blogs
@@ -64,6 +73,11 @@ public class BlogController : ControllerBase
             return NotFound();
         }
 
+        if (!authService.UserHasPermissions(User, original, "AuthorOnlyPolicy"))
+        {
+            return Unauthorized();
+        }
+
         mapper.Map(request, original);
 
         repository.Blogs.Update(original);
@@ -83,6 +97,11 @@ public class BlogController : ControllerBase
         if (blog == null)
         {
             return NotFound();
+        }
+
+        if (!authService.UserHasPermissions(User, blog, "AuthorAndModeratorPolicy"))
+        {
+            return Unauthorized();
         }
 
         var orphanedComments = await repository.Comments
