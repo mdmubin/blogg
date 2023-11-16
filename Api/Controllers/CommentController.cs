@@ -2,8 +2,9 @@ using Api.Data;
 using Api.Models.Dto.Requests;
 using Api.Models.Dto.Responses;
 using Api.Models.Entities;
-
+using Api.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,14 +16,17 @@ public class CommentController : ControllerBase
 {
     private readonly IMapper mapper;
     private readonly RepositoryManager repository;
+    private readonly AuthService authService;
 
-    public CommentController(RepositoryManager repository, IMapper mapper)
+    public CommentController(RepositoryManager repository, IMapper mapper, AuthService authService)
     {
         this.mapper = mapper;
         this.repository = repository;
+        this.authService = authService;
     }
 
     [HttpGet("{blogId:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetComments(Guid blogId)
     {
         var comments = await repository.Comments
@@ -33,6 +37,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetCommentById(Guid id)
     {
         var existing = await repository.Comments
@@ -50,6 +55,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "user")]
     public async Task<ActionResult> CreateComment([FromBody] CommentCreateRequest request)
     {
         var comment = mapper.Map<Comment>(request);
@@ -62,21 +68,56 @@ public class CommentController : ControllerBase
         return CreatedAtAction(nameof(GetCommentById), new { id = comment.Id }, commentResult);
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<ActionResult> DeleteComment(Guid id)
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult> UpdateComment(Guid id, [FromBody] CommentUpdateRequest request)
     {
-        var existing = repository.Comments
-            .FindByCondition(c => c.Id == id)
-            .FirstOrDefault();
+        var original = await repository.Comments
+            .FindByCondition(blog => blog.Id == id)
+            .FirstOrDefaultAsync();
 
-        if (existing == null)
+        if (original == null)
         {
             return NotFound();
         }
 
-        repository.Comments.Delete(existing);
+        if (!authService.UserHasPermissions(User, original, "AuthorOnlyPolicy"))
+        {
+            return Unauthorized();
+        }
+
+        mapper.Map(request, original);
+
+        repository.Comments.Update(original);
         await repository.SaveChanges();
 
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult> DeleteComment(Guid id)
+    {
+        var comment = repository.Comments
+            .FindByCondition(c => c.Id == id)
+            .FirstOrDefault();
+
+        if (comment == null)
+        {
+            return NotFound();
+        }
+
+        if (!authService.UserHasPermissions(User, comment, "AuthorAndModeratorPolicy"))
+        {
+            return Unauthorized();
+        }
+
+        var orphanedReplies = await repository.Replies
+            .FindByCondition(reply => reply.ParentId == id)
+            .ToListAsync();
+
+        repository.Comments.Delete(comment);
+        repository.Replies.DeleteAll(orphanedReplies);
+
+        await repository.SaveChanges();
         return Accepted();
     }
 }
