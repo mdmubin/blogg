@@ -108,7 +108,13 @@ public class BlogController : ControllerBase
             .FindByCondition(comment => comment.BlogId == id)
             .ToListAsync();
 
+        // find all replies whose parent is an orphaned comment
+        var orphanedReplies = await repository.Replies
+            .FindByCondition(reply => orphanedComments.Any(comment => comment.Id == reply.ParentId))
+            .ToListAsync();
+
         repository.Blogs.Delete(blog);
+        repository.Replies.DeleteAll(orphanedReplies);
         repository.Comments.DeleteAll(orphanedComments);
 
         await repository.SaveChanges();
