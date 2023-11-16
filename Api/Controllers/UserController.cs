@@ -25,6 +25,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<ActionResult> CreateUser([FromBody] UserRegistrationRequest request)
     {
         if (request.Password != request.ConfirmPassword)
@@ -47,7 +48,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{username}")]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin, moderator")]
     public async Task<ActionResult> GetUserByUsername(string username)
     {
         if (string.IsNullOrEmpty(username))
@@ -70,6 +71,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult> UserLogin([FromBody] UserAuthRequest request)
     {
         var (validated, user, roles) = await authService.ValidateUser(request);
