@@ -5,6 +5,7 @@ using Api.Models.Dto.Responses;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers;
 
@@ -24,6 +25,7 @@ public class TagController : ControllerBase
 
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult> GetAllTags()
     {
         var tagList = await repository.Tags.GetAll()
@@ -35,6 +37,7 @@ public class TagController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetTagById(Guid id)
     {
         var tag = await repository.Tags
@@ -52,6 +55,7 @@ public class TagController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin, moderator")]
     public async Task<ActionResult> PostTag([FromBody] TagCreateRequest request)
     {
         var newTag = mapper.Map<Tag>(request);
@@ -74,6 +78,7 @@ public class TagController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "admin, moderator")]
     public async Task<ActionResult> UpdateTag(Guid id, [FromBody] TagUpdateRequest request)
     {
         var existing = await repository.Tags
@@ -94,6 +99,7 @@ public class TagController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "admin, moderator")]
     public async Task<ActionResult> DeleteTag(Guid id)
     {
         var existing = await repository.Tags
