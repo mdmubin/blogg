@@ -1,6 +1,4 @@
-using Api.Data;
 using Api.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api;
 
@@ -24,15 +22,6 @@ public static class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-        }
-
-        // TODO: remove this. recreates db on every run (very bad idea, but need it just for now)
-        using (var scope = app.Services.CreateScope())
-        {
-            var context = scope.ServiceProvider.GetRequiredService<BloggContext>();
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            context.Database.Migrate();
         }
 
         app.UseAuthentication();
