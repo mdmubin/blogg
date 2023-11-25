@@ -1,5 +1,8 @@
-import LoginView from './LoginView';
-import RegisterView from './RegisterView';
 import BlogView from './BlogView';
+import LoginView from './LoginView';
+import ProfileView from './ProfileView';
+import RegisterView from './RegisterView';
 
-export { LoginView, RegisterView, BlogView };
+export {
+  BlogView, LoginView, ProfileView, RegisterView,
+};

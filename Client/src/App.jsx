@@ -7,6 +7,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import * as Views from './views';
 
 const router = createBrowserRouter([
+  { path: '/settings', element: <Views.ProfileView /> },
   { path: '/login', element: <Views.LoginView /> },
   { path: '/register', element: <Views.RegisterView /> },
 ]);
