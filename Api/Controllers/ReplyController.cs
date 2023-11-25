@@ -2,8 +2,9 @@ using Api.Data;
 using Api.Models.Dto.Requests;
 using Api.Models.Dto.Responses;
 using Api.Models.Entities;
-
+using Api.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,16 +16,18 @@ public class ReplyController : ControllerBase
 {
     private readonly IMapper mapper;
     private readonly RepositoryManager repository;
+    private readonly AuthService authService;
 
-
-    public ReplyController(RepositoryManager repository, IMapper mapper)
+    public ReplyController(RepositoryManager repository, IMapper mapper, AuthService authService)
     {
         this.mapper = mapper;
         this.repository = repository;
+        this.authService = authService;
     }
 
 
     [HttpGet("{commentId:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetReplies(Guid commentId)
     {
         var comment = await repository.Comments
@@ -40,13 +43,14 @@ public class ReplyController : ControllerBase
             .FindByCondition(r => r.ParentId == commentId)
             .ToListAsync();
 
-        var repliesResult = mapper.Map<ICollection<ReplyResponse>>(replies);
+        var result = mapper.Map<ICollection<ReplyResponse>>(replies);
 
-        return Ok(replies);
+        return Ok(result);
     }
 
 
     [HttpPost("{commentId:guid}")]
+    [Authorize(Roles = "admin, moderator, user")]
     public async Task<ActionResult> CreateReply(Guid commentId, [FromBody] ReplyCreateRequest request)
     {
         var comment = await repository.Comments
@@ -81,6 +85,11 @@ public class ReplyController : ControllerBase
             return NotFound();
         }
 
+        if (!authService.UserHasPermissions(User, existing, "AuthorOnlyPolicy"))
+        {
+            return Unauthorized();
+        }
+
         mapper.Map(request, existing);
 
         repository.Replies.Update(existing);
@@ -100,6 +109,11 @@ public class ReplyController : ControllerBase
         if (existing == null)
         {
             return NotFound();
+        }
+
+        if (!authService.UserHasPermissions(User, existing, "AuthorAndModeratorPolicy"))
+        {
+            return Unauthorized();
         }
 
         repository.Replies.Delete(existing);
