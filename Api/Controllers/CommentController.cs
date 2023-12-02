@@ -25,7 +25,7 @@ public class CommentController : ControllerBase
         this.authService = authService;
     }
 
-    [HttpGet("{blogId:guid}")]
+    [HttpGet("blog/{blogId:guid}")]
     [AllowAnonymous]
     public async Task<ActionResult> GetComments(Guid blogId)
     {
@@ -54,11 +54,23 @@ public class CommentController : ControllerBase
         return Ok(commentResult);
     }
 
-    [HttpPost]
+    [HttpPost("blog/{blogId:guid}")]
     [Authorize(Roles = "user")]
-    public async Task<ActionResult> CreateComment([FromBody] CommentCreateRequest request)
+    public async Task<ActionResult> CreateComment(Guid blogId, [FromBody] CommentCreateRequest request)
     {
-        var comment = mapper.Map<Comment>(request);
+        var blog = await repository.Blogs
+            .FindByCondition(b => b.Id == blogId)
+            .FirstOrDefaultAsync();
+
+        if (blog == null)
+        {
+            return NotFound();
+        }
+
+        var comment = mapper.Map<Comment>(
+            request,
+            opt => opt.AfterMap((src, dest) => dest.BlogId = blogId)
+        );
 
         repository.Comments.Create(comment);
         await repository.SaveChanges();

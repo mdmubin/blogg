@@ -40,13 +40,25 @@ public class BlogController : ControllerBase
 
         var newBlogResult = mapper.Map<BlogResponse>(newBlog);
 
-        return CreatedAtAction(nameof(GetBlog), new { id = newBlog.Id }, newBlogResult);
+        return CreatedAtAction(nameof(GetBlogById), new { id = newBlog.Id }, newBlogResult);
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<ActionResult> GetBlogs()
+    {
+        var blogs = await repository.Blogs
+            .GetAll()
+            .ToListAsync();
+
+        var result = mapper.Map<ICollection<BlogResponse>>(blogs);
+
+        return Ok(result);
+    }
 
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
-    public async Task<ActionResult> GetBlog(Guid id)
+    public async Task<ActionResult> GetBlogById(Guid id)
     {
         var blog = await repository.Blogs
             .FindByCondition(blog => blog.Id == id)
