@@ -12,6 +12,7 @@ public static class Program
         builder.ConfigureSwagger();
         builder.ConfigureDataServices();
         builder.ConfigureAuthServices();
+        builder.ConfigureCorsPolicies();
         // builder.ConfigureCookies();
 
         builder.Services.AddControllers();
@@ -24,6 +25,7 @@ public static class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors("DefaultPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
 

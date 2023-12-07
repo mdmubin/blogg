@@ -141,4 +141,14 @@ public static class ServiceConfiguration
             // TODO: Configure cookies here
         });
     }
+
+    public static void ConfigureCorsPolicies(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddCors(opt => opt.AddPolicy("DefaultPolicy", policy =>
+        {
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+            policy.AllowAnyOrigin();
+        }));
+    }
 }
