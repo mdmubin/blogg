@@ -22,7 +22,7 @@ function BlogView() {
             </div>
           </div>
 
-          {isLoading ? (<Blog data={data} />) : (<Spinner text="Loading" />)}
+          {isLoading ? (<Spinner text="Loading" />) : (<Blog data={data} />)}
 
           <div className="pb-5">
             <CommentBox />
