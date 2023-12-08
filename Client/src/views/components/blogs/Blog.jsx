@@ -7,11 +7,11 @@ function Blog({ data }) {
       <h3>{data.heading}</h3>
       <p className="blog-post-meta">{data.postedDateTime}</p>
 
-      {data.content.split('\n').map((p) => <p>{p}</p>)}
+      {data.content.split('\n').map((p, i) => <p key={`para${i + 1}`}>{p}</p>)}
 
       <div className="py-4">
         <p className="h6">Tags:</p>
-        {data.tags.map((t, i) => <div className="btn btn-sm btn-primary ms-2 my-1" key={`tag${i + 1}`}>{t}</div>)}
+        {data.tags && data.tags.map((t, i) => <div className="btn btn-sm btn-primary ms-2 my-1" key={`tag${i + 1}`}>{t}</div>)}
       </div>
     </div>
   );

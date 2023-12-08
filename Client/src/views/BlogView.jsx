@@ -1,9 +1,15 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Blog from './components/blogs/Blog';
 import CommentBox from './components/comments/CommentBox';
+import Spinner from './components/Spinner';
+import { useGetBlogQuery } from '../store/slices/blogSlice';
 
 function BlogView() {
+  const { id } = useParams();
+  const { data, isLoading } = useGetBlogQuery(id);
+
   return (
     <>
       <Navbar />
@@ -16,7 +22,7 @@ function BlogView() {
             </div>
           </div>
 
-          <Blog />
+          {isLoading ? (<Blog data={data} />) : (<Spinner text="Loading" />)}
 
           <div className="pb-5">
             <CommentBox />
