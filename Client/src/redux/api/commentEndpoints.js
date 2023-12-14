@@ -1,6 +1,6 @@
-import apiSlice from './apiSlice';
+import api from './bloggApi';
 
-const commentSlice = apiSlice.injectEndpoints({
+const commentEndpoints = api.injectEndpoints({
   endpoints: (builder) => ({
 
     getComments: builder.query({
@@ -74,4 +74,4 @@ export const {
   useAddReplyMutation,
   useUpdateReplyMutation,
   useDeleteReplyMutation,
-} = commentSlice;
+} = commentEndpoints;

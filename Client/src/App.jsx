@@ -5,7 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import store from './store/index';
+import store from './redux/store';
 import * as Views from './views';
 
 const router = createBrowserRouter([

@@ -1,6 +1,6 @@
-import apiSlice from './apiSlice';
+import api from './bloggApi';
 
-const blogSlice = apiSlice.injectEndpoints({
+const blogEndpoints = api.injectEndpoints({
   endpoints: (builder) => ({
 
     getBlogList: builder.query({
@@ -43,4 +43,4 @@ export const {
   usePostBlogMutation,
   useUpdateBlogMutation,
   useDeleteBlogMutation,
-} = blogSlice;
+} = blogEndpoints;

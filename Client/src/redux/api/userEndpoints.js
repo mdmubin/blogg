@@ -1,6 +1,6 @@
-import apiSlice from './apiSlice';
+import api from './bloggApi';
 
-const userSlice = apiSlice.injectEndpoints({
+const userEndpoints = api.injectEndpoints({
   endpoints: (builder) => ({
 
     profile: builder.query({
@@ -32,4 +32,4 @@ export const {
   useProfileQuery,
   useLoginMutation,
   useRegisterMutation,
-} = userSlice;
+} = userEndpoints;
