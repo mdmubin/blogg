@@ -5,7 +5,7 @@ import userReducer from './slices/userSlice';
 const store = configureStore({
   reducer: combineReducers({
     [bloggApi.reducerPath]: bloggApi.reducer,
-    userReducer,
+    user: userReducer,
   }),
   middleware: (middleware) => middleware().concat(bloggApi.middleware),
   devTools: true,

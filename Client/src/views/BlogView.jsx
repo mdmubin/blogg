@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Blog from './components/blogs/Blog';
 import CommentBox from './components/comments/CommentBox';
 import Spinner from './components/Spinner';
-import { useGetBlogQuery } from '../store/slices/blogSlice';
+import { useGetBlogQuery } from '../redux/api/blogEndpoints';
 
 function BlogView() {
   const { id } = useParams();
