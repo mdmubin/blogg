@@ -2,6 +2,8 @@ import React from 'react';
 import Types from 'prop-types';
 
 function Blog({ data }) {
+  // eslint-disable-next-line no-param-reassign
+  data = JSON.parse(data); // temporary hack
   return (
     <div className="row">
       <h3>{data.heading}</h3>

@@ -22,6 +22,7 @@ function LoginView() {
 
   useEffect(() => {
     if (loggedIn) {
+      // navigate(window.history?.length ? -1 : '');
       navigate(redirect);
     }
   }, [navigate, redirect, loggedIn]);

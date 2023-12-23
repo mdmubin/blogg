@@ -88,7 +88,7 @@ public class AuthService
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        return new AuthResponse { Token = tokenHandler.WriteToken(token), Expires = expiresAt, };
+        return new AuthResponse { Token = tokenHandler.WriteToken(token), Expires = expiresAt, Username = username };
     }
 
     public bool UserHasPermissions(ClaimsPrincipal userClaim, ContentBase content, string policy)
