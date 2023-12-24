@@ -46,6 +46,12 @@ function Navbar({ activeTab }) {
                 Home
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className={`nav-link ${activeTab === 'BLOG' ? 'active' : ''}`} to="/blog">
+                <i className="bi bi-house pe-1" />
+                Blogs
+              </Link>
+            </li>
             <li className="nav-item dropdown">
               <div
                 className="nav-link dropdown-toggle"
@@ -75,12 +81,20 @@ function Navbar({ activeTab }) {
                     </>
                   )
                   : (
-                    <li>
-                      <Link className="dropdown-item" to={`/login?redirect=${location.pathname}`}>
-                        <i className="bi bi-box-arrow-in-right pe-2" />
-                        Login
-                      </Link>
-                    </li>
+                    <>
+                      <li>
+                        <Link className="dropdown-item" to={`/login?redirect=${location.pathname}`}>
+                          <i className="bi bi-box-arrow-in-right pe-2" />
+                          Login
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/register">
+                          <i className="bi bi-card-checklist pe-2" />
+                          Register
+                        </Link>
+                      </li>
+                    </>
                   )}
 
                 <li><hr className="dropdown-divider" /></li>
