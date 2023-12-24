@@ -9,6 +9,8 @@ import store from './redux/store';
 import * as Views from './views';
 
 const router = createBrowserRouter([
+  { path: '/', element: <Views.HomeView /> },
+  { path: '/blog', element: <Views.BlogListView /> },
   { path: '/settings', element: <Views.ProfileView /> },
   { path: '/login', element: <Views.LoginView /> },
   { path: '/register', element: <Views.RegisterView /> },

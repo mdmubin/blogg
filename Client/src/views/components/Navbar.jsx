@@ -48,7 +48,7 @@ function Navbar({ activeTab }) {
             </li>
             <li className="nav-item">
               <Link className={`nav-link ${activeTab === 'BLOG' ? 'active' : ''}`} to="/blog">
-                <i className="bi bi-house pe-1" />
+                <i className="bi bi-file-earmark-text pe-1" />
                 Blogs
               </Link>
             </li>
