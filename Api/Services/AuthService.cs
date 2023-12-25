@@ -62,11 +62,11 @@ public class AuthService
         var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["JwtSecret"]!));
         var signingCredentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
 
-        var expiresAt = DateTime.UtcNow.AddMinutes(double.Parse(jwtConfig["ExpiresAfter"]!));
+        // var expiresAt = DateTime.UtcNow.AddMinutes(double.Parse(jwtConfig["ExpiresAfter"]!));
 
         var userClaims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Exp, expiresAt.ToString()),
+            // new(JwtRegisteredClaimNames.Exp, expiresAt.ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Name, username),
@@ -82,13 +82,13 @@ public class AuthService
             issuer: jwtConfig["Issuer"],
             audience: jwtConfig["Audience"],
             claims: userClaims,
-            expires: expiresAt,
+            // expires: expiresAt,
             signingCredentials: signingCredentials
         );
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        return new AuthResponse { Token = tokenHandler.WriteToken(token), Expires = expiresAt, Username = username };
+        return new AuthResponse { Token = tokenHandler.WriteToken(token), Username = username };
     }
 
     public bool UserHasPermissions(ClaimsPrincipal userClaim, ContentBase content, string policy)
